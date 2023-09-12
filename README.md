@@ -54,7 +54,18 @@ Link Adaptable: none (Error)
 
 ### Melakukan deployment ke Adaptable
 
-none
+1. Pergi ke link Adaptable.io
+2. Click App Dashboard
+3. Click new app untuk membuat aplikasi baru. Pilih 'connect an existing repository'
+4. Pilih repository yang ingin kita pakai. Disini, saya memakai repository 'inventory'
+5. Pilih branch untuk dipakai. Disini, saya memakai 'main'
+6. Pilih Python App Template sebagai deploy template
+7. Pilih PostgreSQL sebagai Database type
+8. Pilih python version yang dipakai. Disini, sayamemakai python versi 3.10
+9. Edit Start command menjadi 'python manage.py migrate && gunicorn inventory.wsgi'
+10. Tentukan nama appnya
+11. Centan HTTP Listenenr on PORT
+12. Click Deploy App
 
 ## Request client ke web aplikasi berbasis Django beserta responnya
 
