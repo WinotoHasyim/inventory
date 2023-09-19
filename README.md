@@ -1,6 +1,7 @@
 <details>
 <summary>Tugas 2 PBP</summary>
 <br>
+
 # inventory
 
 Link Adaptable: none (Error)
