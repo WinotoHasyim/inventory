@@ -1,10 +1,27 @@
+# inventoryge
+
+Link Adaptable: none (Error)
+
+<details>
+<summary>Tugas 3 PBP</summary>
+<br>
+
+## Cara implementasi poin-poin pada tugas
+
+Pertama-tama, nyalakan virtual environment di `cmd` pada local repo dengan perintah berikut.
+```ruby
+env\Scripts\activate.bat
+```
+
+### Membuat input form untuk menambahkan objek model
+
+1. Buat file `forms.py`
+
+</details>
+
 <details>
 <summary>Tugas 2 PBP</summary>
 <br>
-
-# inventory
-
-Link Adaptable: none (Error)
 
 ## Cara implementasi poin-poin pada tugas
 
