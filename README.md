@@ -69,7 +69,7 @@ Link Adaptable: none (Error)
 
 ## Request client ke web aplikasi berbasis Django beserta responnya
 
-![Alt text](https://i.imgur.com/lwxXRhS.jpg)
+![What's alt text?](https://i.imgur.com/lwxXRhS.jpg)
 Gambar Bagan: https://i.imgur.com/lwxXRhS.jpg
 Kaitan urls.py, views.py, models.py, dan berkas html:
 1. urls.py akan menyocokkan pola URL yang kemudian dari pola tersebut akan diketahui function yang mana yang akan diproses dari views.py
