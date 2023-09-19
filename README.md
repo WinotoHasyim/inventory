@@ -1,3 +1,6 @@
+<details>
+<summary>Tugas 2 PBP</summary>
+<br>
 # inventory
 
 Link Adaptable: none (Error)
@@ -69,7 +72,8 @@ Link Adaptable: none (Error)
 
 ## Request client ke web aplikasi berbasis Django beserta responnya
 
-Gambar Bagan: https://i.imgur.com/lwxXRhS.jpg
+Gambar Bagan:
+![Bagan](https://i.imgur.com/lwxXRhS.jpg)
 Kaitan urls.py, views.py, models.py, dan berkas html:
 1. urls.py akan menyocokkan pola URL yang kemudian dari pola tersebut akan diketahui function yang mana yang akan diproses dari views.py
 2. views.py dapat berinteraksi dengan model agar bisa menyimpan atau mengambil data untuk ditampilkan nanti
@@ -95,3 +99,4 @@ Perbedaan dari ketiga konsep arsitektur ini adalah MVC dan MVVM menggunakan view
 ## Implementasi test lain pada tests.py
 
 Di dalam tests.py, ada tambahan test yang dilakukan. Test tersebut bernama test_name_is_exist_in_main_template. Test ini bertujuan untuk mengecek apakah string "Name:" Muncul pada konten yang sedang ditampilkan
+</details>

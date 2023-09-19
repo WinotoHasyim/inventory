@@ -1,6 +1,37 @@
-<h1>{{ app }}</h1>
+{% extends 'base.html' %}
 
-<h5>Name: </h5>
-<p>{{ name }}<p>
-<h5>Class: </h5>
-<p>{{ class }}<p>
+{% block content %}
+
+    <h1>{{ app }}</h1>
+
+    <h5>Name: </h5>
+    <p>{{ name }}<p>
+    <h5>Class: </h5>
+    <p>{{ class }}<p>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Description</th>
+        </tr>
+        
+        <h3>Kamu menyimpan {{ total_item }} item pada aplikasi ini</h3>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.amount }}</td>
+                <td>{{ item.description }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <br />
+    
+    <a href="{% url 'main:create_item' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+
+{% endblock content %}
