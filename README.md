@@ -246,23 +246,23 @@ git push origin main
 
 ### XML
 
-![XML](https://imgur.com/a/f6PRQWW)
+![XML](https://i.imgur.com/2EjJ0U5.png)
 
 ### XML by ID
 
-![XML by ID](https://imgur.com/a/rNtW4EB)
+![XML by ID](https://i.imgur.com/w5FFzzN.png)
 
 ### JSON
 
-![JSON](https://imgur.com/a/VZhetb7)
+![JSON](https://i.imgur.com/yw2WQAj.png)
 
 ### JSON by ID
 
-![JSON by ID](https://imgur.com/a/cswJkXI)
+![JSON by ID](https://i.imgur.com/Ehr0I4n.png)
 
 ### HTML
 
-![HTML](https://imgur.com/a/ifFnSRt)
+![HTML](https://i.imgur.com/xXHXHhj.png)
 
 </details>
 
