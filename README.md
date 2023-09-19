@@ -24,12 +24,14 @@ class ItemForm(ModelForm):
         fields = ["name", "amount", "description"]
 ```
 Ini akan membuat form untuk objek `Item` dengan `fields` seperti yang dispesifikasikan di kode tersebut
+
 2. Buka `views.py` pada direktori `main` dan tambahkan kode ini untuk menambahkan beberapa import:
 ```python
 from django.http import HttpResponseRedirect
 from main.forms import ItemForm
 from django.urls import reverse
 ```
+
 3. Buat function baru bernama `create_item` yang menerima parameter `request` seperti kode berikut:
 ```python
 def create_item(request):
@@ -43,6 +45,7 @@ def create_item(request):
     return render(request, "create_item.html", context)
 ```
 Function ini akan digunakan untuk membuat variable `form` dan kemudian jika `form` tersebut valid dan mendapatkan input dari user melalui metode `POST`, maka dia akan kembali ke halaman utama. Jika tidak, dia akan ke halaman lain untuk mengisi informasi tentang item yang ingin ditambahkan.
+
 4. Ubah function `show_main` pada `views.py` sehingga menjadi seperti berikut:
 ```python
 def show_main(request):
@@ -61,6 +64,7 @@ def show_main(request):
 ```
 Kita tambahkan variable `items` untuk mendapatkan informasi dari semua objek `Item` pada database.
 (Untuk BONUS, itu hanya untuk mengitung berapa jenis item yang didaftarkan)
+
 5. Buka `urls.py` pada folder `main` dan import function `create_item`:
 ```python
 from main.views import show_main, create_item
@@ -69,6 +73,7 @@ Tambahkan juga path url ke dalam list `urlpatterns`-nya:
 ```python
 path('create-item', create_item, name='create_item'),
 ```
+
 6. Buat folder baru bernama `templates` pada root folder dan buatlah file bernama `base.html` di dalam folder baru tersebut. Isi filenya dengan kode seperti berikut:
 ```html
 {% load static %}
@@ -104,8 +109,10 @@ TEMPLATES = [
 ]
 ...
 ```
+
 7. Buatlah file `create_item.html` pada direktori `main/templates` dan tambahkan kode berikut:
 ```html
+
 {% extends 'base.html' %} 
 
 {% block content %}
@@ -127,6 +134,7 @@ TEMPLATES = [
 {% endblock %}
 ```
 File html ini akan mengextend kerangka file html tadi yaitu `base.html` dan mengisi bagian kontennya. File ini juga berisi form dengan metode `POST` yang di dalam block tersebut akan dibuat tombol submit untuk mengirim request ke `create_item(request)`
+
 8. Ubah isi file `main.html` pada direktori `main/templates`:
 ```html
 {% extends 'base.html' %}
@@ -167,6 +175,7 @@ File html ini akan mengextend kerangka file html tadi yaitu `base.html` dan meng
 
 {% endblock content %}
 ```
+
 9. Buka `views.py` yang ada di folder `main` dan lakukan import sehingga kode akan menjadi seperti berikut:
 ```python
 from django.shortcuts import render
@@ -176,6 +185,7 @@ from django.urls import reverse
 from main.models import Item
 from django.core import serializers
 ```
+
 10. Buatlah function-function yang berfungsi untuk mengembalikan data dalam bentuk XML dan JSON, dan juga function untuk mengembalikan data berdasarkan ID dalam bentuk XML dan JSON:
 ```python
 def show_xml(request):
@@ -195,6 +205,7 @@ def show_json_by_id(request, id):
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 ```
 `serializers` ini digunakan untuk men-translate objek model menjadi format lain seperti XML atau JSON.
+
 11. Buka `urls.py` pada folder `main`. Lakukan import seperti berikut:
 ```python
 from main.views import show_main, create_item, show_json, show_json_by_id, show_xml, show_xml_by_id
@@ -210,6 +221,7 @@ urlpatterns = [
     path('json/<int:id>/', show_json_by_id, name='show_json_by_id'),
 ]
 ```
+
 12. Lakukan `add`, `commit`, dan `push`:
 ```
 git add .
