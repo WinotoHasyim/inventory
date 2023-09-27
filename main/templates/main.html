@@ -22,6 +22,9 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.amount }}</td>
                 <td>{{ item.description }}</td>
+                <td><form method="POST" action="{% url 'main:increase_amount' item.id %}">{% csrf_token %}<button type="submit">+</button></form></td>
+                <td><form method="POST" action="{% url 'main:decrease_amount' item.id %}">{% csrf_token %}<button type="submit">-</button></form></td>
+                <td><form method="POST" action="{% url 'main:remove_item' item.id %}">{% csrf_token %}<button type="submit">Remove</button></form></td>
             </tr>
         {% endfor %}
     </table>
@@ -30,8 +33,16 @@
     
     <a href="{% url 'main:create_item' %}">
         <button>
-            Add New Product
+            Add New Item
         </button>
     </a>
+
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Logout
+        </button>
+    </a>
+
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
 
 {% endblock content %}
