@@ -407,7 +407,7 @@ Terdapat risiko potensial yang harus diwaspadai dalam penggunaan cookies, contoh
 <td><form method="POST" action="{% url 'main:remove_item' item.id %}">{% csrf_token %}<button type="submit">Remove</button></form></td>
 ...
 ```
-Menggunakan method POST untuk mentransfer dan meneruskan argumen item.id
+Menggunakan method POST untuk mentransfer data. Form akan meneruskan argumen item.id
 
 2. Buka file `views.py` dan lakukan import:
 ```python
