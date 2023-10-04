@@ -40,7 +40,7 @@ pada `base.html` jika belum.
 ```
 style disini digunakan untuk menerapkan styling pada elemen `main` pada HTML. Styling digunakan hanya untuk meng-align webpage menjadi centered
 
-3. Untuk setiap file HTML pada folder `main/templates`, tambakan elemen `<main>` pada awal-awal block content dan tutup elemen tersebut di akhir-akhir block content. 
+3. Untuk setiap file HTML pada folder `main/templates`, tambakan tag `<main>` pada awal-awal block content dan tutup tag tersebut di akhir-akhir block content. 
 
 4. Pada file `login.html`, gunakan login button berikut:
 ```html
