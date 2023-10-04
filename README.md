@@ -127,7 +127,7 @@ ada konten yang menggunakan class navbar collapse agar ketika size dari web tida
     <h5>Sesi terakhir login: {{ last_login }}</h5>
 </main>
 ```
-Disini tabel tidak dipakai lagi untuk menampilkan daftar item, tetapi memakai card. Kode yang digunakan untuk membuat background color dari item terakhir berbeda dengan background color item yang lain adalah `{% if forloop.last %}bg-info{% endif %}` yang berada pada atribut class.
+Disini tabel tidak dipakai lagi untuk menampilkan daftar item, tetapi memakai card. Kode yang digunakan untuk membuat background color dari item terakhir berbeda dengan background color item yang lain adalah `{% if forloop.last %}bg-info{% endif %}` yang berada pada atribut class card.
 
 ### add-commit-push
 
