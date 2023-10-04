@@ -38,7 +38,7 @@ pada `base.html` jika belum.
     }
 </style>
 ```
-style disini digunakan untuk menerapkan styling pada (tapi tidak terbatas untuk) elemen `main` pada HTML. Styling digunakan hanya untuk meng-align webpage menjadi centered
+style disini digunakan untuk menerapkan styling pada elemen `main` pada HTML. Styling digunakan hanya untuk meng-align webpage menjadi centered
 
 3. Untuk setiap file HTML pada folder `main/templates`, tambakan elemen `<main>` pada awal-awal block content dan tutup elemen tersebut di akhir-akhir block content. 
 
