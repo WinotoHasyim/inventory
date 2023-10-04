@@ -2,47 +2,65 @@
 
 {% block content %}
 
-    <h1>{{ app }}</h1>
-
-    <h5>Name: </h5>
-    <p>{{ name }}<p>
-    <h5>Class: </h5>
-    <p>{{ class }}<p>
-
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Description</th>
-        </tr>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">{{ app }}</a>
+                </div>
+                <button class="navbar-toggler order-first" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav ms-auto">
+                        <div class="row">
+                            <div class="col">
+                                <a class="nav-link">Welcome, {{ name }} from {{ class }}</a>
+                            </div>
+                        </div>
+                        <li class="nav-item">
+                            <form class="d-flex" role="logout">
+                                <a href="{% url 'main:logout' %}" class="btn btn-info btn-lg">
+                                    <span class="glyphicon glyphicon-log-out"></span> Log out
+                                </a>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
         
         <h3>Kamu menyimpan {{ total_item }} item pada aplikasi ini</h3>
-        {% for item in items %}
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.amount }}</td>
-                <td>{{ item.description }}</td>
-                <td><form method="POST" action="{% url 'main:increase_amount' item.id %}">{% csrf_token %}<button type="submit">+</button></form></td>
-                <td><form method="POST" action="{% url 'main:decrease_amount' item.id %}">{% csrf_token %}<button type="submit">-</button></form></td>
-                <td><form method="POST" action="{% url 'main:remove_item' item.id %}">{% csrf_token %}<button type="submit">Remove</button></form></td>
-            </tr>
-        {% endfor %}
-    </table>
+        <div class="row">
+            {% for item in items %}
+            <div class="card {% if forloop.last %}bg-info{% endif %}" style="width: 20rem; margin: 1rem; background-color: rgb(171, 170, 172);">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text">{{ item.description }}</p>
+                    <p class="card-text">Amount: {{ item.amount }}</p>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group" role="group">
+                            <form method="POST" action="{% url 'main:increase_amount' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-success">+</button></form>
+                            <form method="POST" action="{% url 'main:decrease_amount' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-danger">-</button></form>
+                        </div>
+                        <form method="POST" action="{% url 'main:remove_item' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-dark">Remove</button></form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     
-    <br />
-    
-    <a href="{% url 'main:create_item' %}">
-        <button>
-            Add New Item
-        </button>
-    </a>
+        <br />
+        
+        <a href="{% url 'main:create_item' %}">
+            <button>
+                Add New Item
+            </button>
+        </a>
 
-    <a href="{% url 'main:logout' %}">
-        <button>
-            Logout
-        </button>
-    </a>
-
-    <h5>Sesi terakhir login: {{ last_login }}</h5>
+        <h5>Sesi terakhir login: {{ last_login }}</h5>
+    </main>
 
 {% endblock content %}

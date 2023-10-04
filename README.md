@@ -8,6 +8,210 @@ Link Adaptable: none (Error)
 
 ## Cara implementasi poin-poin pada tugas
 
+1. Menambahkan 
+```html
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+/>
+```
+pada `base.html` jika belum.
+
+2. Untuk menggunakan bootstrap, tambahkan kode ini dibawah elemen `meta`:
+```html
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+J4jsl5c9zdLKaUk5Ae5f5b1bw6AUn5f5v8FZJoMxm6f5cH1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<style>
+    main {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 4rem 4rem;
+        flex: 1;
+
+        display: flex;
+        align-items: center;
+        flex-direction:column; justify-content:center;
+        min-height:100vh;
+    }
+</style>
+```
+style disini digunakan untuk menerapkan styling pada (tapi tidak terbatas untuk) elemen `main` pada HTML. Styling digunakan hanya untuk meng-align webpage menjadi centered
+
+3. Untuk setiap file HTML pada folder `main/templates`, tambakan elemen `<main>` pada awal-awal block content dan tutup elemen tersebut di akhir-akhir block content. 
+
+4. Pada file `login.html`, gunakan login button berikut:
+```html
+<tr>
+    <td></td>
+    <td><input type="submit" class="btn btn-outline-success" value="login"></td>
+</tr>
+```
+
+5. Pada file `register.html`, gunakan button berikut:
+```html
+<tr>  
+    <td></td>
+    <td><input class="btn btn-outline-primary" type="submit" name="submit" value="Daftar"/></td>  
+</tr>  
+```
+
+6. Buka file `main.html`. Sebelum elemen `<main>`, tambahkan elemen `<header>` untuk menambahkan header yang akan dipakai sebagai navigation bar. Kode akan menjadi seperti berikut:
+```html
+<header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">{{ app }}</a>
+            </div>
+            <button class="navbar-toggler order-first" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <ul class="navbar-nav ms-auto">
+                    <div class="row">
+                        <div class="col">
+                            <a class="nav-link">Welcome, {{ name }} from {{ class }}</a>
+                        </div>
+                    </div>
+                    <li class="nav-item">
+                        <form class="d-flex" role="logout">
+                            <a href="{% url 'main:logout' %}" class="btn btn-info btn-lg">
+                                <span class="glyphicon glyphicon-log-out"></span> Log out
+                            </a>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<main>
+    ...
+```
+ada konten yang menggunakan class navbar collapse agar ketika size dari web tidak mencukupi, teks welcome user dan logout button ada di dalam collapse tersebut. Disini juga digunakan header yang menampilkan nama app
+
+7. (Termasuk Penjelasan Bonus) Dalam elemen `<main>`, ubah kode sehingga menjadi seperti berikut:
+```html
+<main>
+    <h3>Kamu menyimpan {{ total_item }} item pada aplikasi ini</h3>
+    <div class="row">
+        {% for item in items %}
+        <div class="card {% if forloop.last %}bg-info{% endif %}" style="width: 20rem; margin: 1rem; background-color: rgb(171, 170, 172);">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.name }}</h5>
+                <p class="card-text">{{ item.description }}</p>
+                <p class="card-text">Amount: {{ item.amount }}</p>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group" role="group">
+                        <form method="POST" action="{% url 'main:increase_amount' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-success">+</button></form>
+                        <form method="POST" action="{% url 'main:decrease_amount' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-danger">-</button></form>
+                    </div>
+                    <form method="POST" action="{% url 'main:remove_item' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-dark">Remove</button></form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <br />
+
+    <a href="{% url 'main:create_item' %}">
+        <button>
+            Add New Item
+        </button>
+    </a>
+
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
+</main>
+```
+Disini tabel tidak dipakai lagi untuk menampilkan daftar item, tetapi memakai card. Kode yang digunakan untuk membuat background color dari item terakhir berbeda dengan background color item yang lain adalah `{% if forloop.last %}bg-info{% endif %}` yang berada pada atribut class.
+
+### add-commit-push
+
+Jalankan command berikut:
+```
+git add .
+```
+```
+git commit -m "<message>"
+```
+```
+git push origin main
+```
+
+## Pertanyaan
+
+### Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
+
+- Universal selector = Memilih semua elemen pada halaman web untuk diatur stylingnya. biasanya digunakan untuk sizing seperti `box-sizing: border-box;`, atau memberikan style yang bersifat umum pada semua elemen.
+
+- Type Selector = Memilih semua elemen dengan jenis tertentu (`h1`, `p`, dll.) untuk diatur stylingnya. Dipakai ketika mau menerapkan style pada jenis elemen yang sama pada suatu file html
+
+- Class Selector = Memilih elemen yang mempunyai atribut class tertentu. Dipakai ketika kita mau menerapkan styling pada elemen dengan class yang sama, tanpa melihat jenis elemen apa yang memakai class tersebut
+
+- ID Selector = Memilih elemen yang mempunyai ID tertentu. Biasanya setiap id itu unik, jadi ID selector dipakai untuk menerapkan styling pada elemen yang unik.
+
+### Jelaskan HTML5 Tag yang kamu ketahui.
+
+- `<header>`: Digunakan untuk mengelompokkan elemen-elemen yang berada di dalam bagian atas halaman atau elemen tertentu yang merupakan bagian judul atau kepala dokumen
+
+- `<nav>`: Mendefinisikan bagian navigasi dalam dokumen. Ini sering digunakan untuk membuat menu navigasi
+
+- `<main>`: Menunjukkan konten utama dokumen. Hanya ada satu elemen `<main>` dalam satu halaman
+
+- `<footer>`: Digunakan untuk mengelompokkan elemen-elemen yang berada di bagian bawah halaman atau elemen tertentu yang merupakan bagian penutup atau kaki dokumen
+
+- `<p>`: Merupakan teks paragraf
+
+- `<a>`: Digunakan untuk menghubungkan suatu page dengan yang lain
+
+- `<h1>`: Merupakan judul. Terdapat tag `<h1>` sampai `<h6>`, semakin kecil angkanya, semakin kecil ukuran judulnya
+
+- `<body>`: Isi utama dari HTML-nya
+
+- `<ul>`: Unordered list (Menggunakan dot)
+
+- `<ol>`: Ordered list (Menggunakan nomor atau alfabet)
+
+- `<li>`: list dalam `<ul>` ataupun `<ol>`
+
+- `div`: Mengelompokkan konten
+
+- `<form>`: Formulir untuk mengumpulkan data dari user
+
+### Jelaskan perbedaan antara margin dan padding.
+
+Margin merupakan area yang dikosongkan di luar border dan bersifat transparan, sedangkan padding merupakan area yang dikosongkan dari luar content sampai border dan juga bersifat transparan. Padding mengatur jarak content dengan bordernya sedangkan margin mengatur jarak antar-elemen
+
+### Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
+
+- Tailwind:
+    - Membangun tampilan dengan menggunakan kelas-kelas utilitas yang sudah didefinisikan
+    - Ukuran berkas nya lebih ringan karena hanya memuat kelas-kelas utilitas yang ada
+    - Fleksibilitasnya tinggi, yang artinya kita bisa mendesain web dengan gaya kita sendiri
+    - Memakan waktu yang lama untuk dipelajari karena memerlukan pemahaman terhadap kelas-kelas utilitas yang ada
+
+- Bootstrap:
+    - Memiliki komponen siap pakai yang desainnya sudah ditentukan
+    - Ukuran berkasnya lebih besar karena memiliki banyak komponen dan gaya bawaan
+    - Biasanya menghasilkan tampilan yang konsisten tetapi cenderung sulit untuk disesuaikan dengan gaya yang diinginkan
+    - Memakan waktu yang cepat untuk dipelajari karena kita hanya memakai komponen yang sudah ada
+
+Bootstraps sebaiknya digunakan jika kita mau mengembangkan suatu web dengan waktu yang relatif cepat. Ini cocok untuk proyek-proyek yang memerlukan konsistensi desain dengan menggunakan komponen bawaan
+
+Tailwind CSS sebaiknya digunakan jika ingin fleksibilitas dalam desain dan bersedia menghabiskan waktu lebih banyak untuk menyesuaikan tampilan sesuai gaya sendiri. Ini cocok untuk proyek-proyek yang ingin tampilan yang unik atau jika pengembang ingin mengutamakan ukuran berkas yang lebih kecil
+
+</details>
+
+<details>
+<summary>Tugas 4 PBP</summary>
+<br>
+
+## Cara implementasi poin-poin pada tugas
+
 Pertama-tama, nyalakan virtual environment di `cmd` pada local repo dengan perintah berikut.
 ```
 env\Scripts\activate.bat
