@@ -1,6 +1,413 @@
 # inventoryge
 
-Link Web: none (Error)
+Link Web: http://winoto-hasyim.tugas.pbp.cs.ui.ac.id/
+
+<details>
+<summary>Tugas 6 PBP</summary>
+<br>
+
+## Cara implementasi poin-poin pada tugas
+
+1. Ubah kode di dalam file `main.html` menjadi
+```html
+    ...
+    <main>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form" onsubmit="return false;">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount" class="col-form-label">Amount:</label>
+                                <input type="number" class="form-control" id="amount" name="amount"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="col-form-label">Description:</label>
+                                <textarea class="form-control" id="description" name="description"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Item</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h3>Kamu menyimpan <span id="total-items">{{ total_item }}</span> item pada aplikasi ini</h3>
+        <div class="row" id="item_card"></div>
+    
+        <br />
+        
+        <a href="{% url 'main:create_item' %}">
+            <button>
+                Add New Item
+            </button>
+        </a>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Item by AJAX</button>
+
+        <h5>Sesi terakhir login: {{ last_login }}</h5>
+    </main>
+
+    <script>
+        async function getItems() {
+            return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+        }
+
+        async function refreshItems() {
+            document.getElementById("item_card").innerHTML = ""
+            const items = await getItems()
+            let htmlString = ``
+            items.forEach((item, index) => {
+                const isLastItem = index === items.length - 1;
+                htmlString += `\n
+                <div class="card ${isLastItem ? 'bg-info' : ''}" style="width: 20rem; margin: 1rem; background-color: rgb(171, 170, 172);">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.fields.name}</h5>
+                        <p class="card-text">${item.fields.description}</p>
+                        <p class="card-text">Amount: ${item.fields.amount}</p>
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group" role="group">
+                                <a> <button class="btn btn-success" onclick="increaseAmount(${item.pk}); return false;">+</button> </a>
+                                <a> <button class="btn btn-danger" onclick="decreaseAmount(${item.pk}); return false;">-</button> </a>
+                            </div>
+                            <a> <button class="btn btn-dark" onclick="deleteItem(${item.pk}); return false;">Remove</button> </a>
+                        </div>
+                    </div>
+                </div>` 
+            })
+            const total_item = items.length;
+            document.getElementById("total-items").textContent = total_item;
+            
+            document.getElementById("item_card").innerHTML = htmlString
+        }
+
+        refreshItems()
+
+        function addItem() {
+            fetch("{% url 'main:add_item_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshItems)
+
+            document.getElementById("form").reset()
+            return false
+        }
+
+        document.getElementById("button_add").onclick = addItem
+
+        function deleteItem(itemId) {
+            fetch(`remove_item/${itemId}`, {
+                method: "DELETE", // implementasi bonus
+                
+            }).then(refreshItems)
+            return false
+        }
+
+        function increaseAmount(itemId) {
+            fetch(`increase_amount/${itemId}`, {
+                method: "GET",
+                
+            }).then(refreshItems)
+            return false
+        }
+
+        function decreaseAmount(itemId) {
+            fetch(`decrease_amount/${itemId}`, {
+                method: "GET",
+                
+            }).then(refreshItems)
+            return false
+        }
+
+    </script>
+    ...
+```
+Disini kita membuat modal sebagai Form untuk menambahkan Item (elemen div pertama), dan untuk kode
+```html
+<h3>Kamu menyimpan <span id="total-items">{{ total_item }}</span> item pada aplikasi ini</h3>
+<div class="row" id="item_card"></div>
+```
+kita menambahkan span dengan id `total-items` yang nantinya akan berisi jumlah item yang kita punya. Selain itu kita juga mengosongkan card yang ada di main element sebelumnya, kemudian untuk elemen div yang mengnadung card tersebut, kita assign id `item_card`. Id-id yang diassign bertujuan agar kode json mengangkap kode kita berdasarkan Id. 
+
+Untuk kode:
+```html
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Item by AJAX</button>
+```
+itu adalah button yang berfungsi untuk menambahkan Item dengan Ajax
+
+Di element script, didapatkan beberapa fungsi:
+- getItems() = berfungsi untuk mendapatkan items yang dimiliki user
+- refreshItems() = fungsi ini digunakan untuk merefresh item-item yang dimiliki user dalam bentuk card, dan untuk card yang terakhir akan diassign warna yang berbeda dari yang lainnya. Fungsi ini juga digunakan untuk mengubah textcontent dari elemen dengan id `total-items`
+- addItem() = Menambah item, kemudian memanggiul function refreshItems()
+- deleteItem() = Remove item, kemudian memanggiul function refreshItems()
+- increaseAmount() = menambah jumlah item, kemudian memanggiul function refreshItems()
+- decreaseAmount() = Mengurangi jumlah item, kemudian memanggiul function refreshItems()
+
+Selain fungsi, kita juga menambahkan kode:
+```html
+refreshItems()
+document.getElementById("button_add").onclick = addItem
+```
+yang berfungsi untuk refresh item, dan untuk memanggil function addItem ketika elemen dengan id `button_add` diklik
+
+2. Lakukan import:
+```python
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+```
+
+Dalam function `show_main`, ubah value `last_login` menjadi `request.COOKIES.get('last_login'),`. Kemudian, tambahkan function baru:
+```python
+def get_item_json(request):
+    product_item = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', product_item))
+
+@csrf_exempt
+def add_item_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_item = Item(name=name, amount=amount, description=description, user=user)
+        new_item.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+```
+function pertama berfungsi untuk mendapatkan item berdasarkan user yang sedang login, sedangkan function kedua berfungsi untuk menambahkan Item pada user yang sedang login. Setelah itu, ubah conditional request.method == "POST" menjadi request.method == "GET" dalam function increase_amount dan decrease_amount, dan request.method == "DELETE" dalam function remove_item. Untuk remove_item sendiri, hasil akhir function tersebut akan menjadi seperti berikut:
+```python
+@csrf_exempt
+def remove_item(request, id):
+    if request.method == "POST":
+    if request.method == "DELETE":
+        item = get_object_or_404(Item, pk=id, user=request.user)
+        item.delete()
+        return HttpResponse(b"DELETED", status=201)
+    return HttpResponseNotFound()
+```
+
+
+3. Buka `urls.py` pada aplikasi `main`, dan import function dari `views.py` sehingga menjadi seperti berikut:
+```python
+    ...
+    from main.views import show_main, create_item, show_json, show_json_by_id, show_xml, show_xml_by_id, register, login_user, logout_user, increase_amount, decrease_amount, remove_item, get_item_json, add_item_ajax
+    ...
+```
+
+Kemudian tambahkan path berikut ke dalam `urlpatterns` untuk menambahkan routing:
+```python
+    path('get-item/', get_item_json, name='get_item_json'),
+    path('create-ajax/', add_item_ajax, name='add_item_ajax'),
+```
+
+4. Tambahkan `django-environ` pada berkas `requirements.txt`
+
+5. Jalankan perintah `pip install -r requirements.txt` pada cmd
+
+6. Buat berkas baru bernama `Procfile` pada root folder dan isi file berikut dengan kode:
+```
+release: django-admin migrate --noinput
+web: gunicorn inventory.wsgi
+```
+
+7. Buat folder baru bernama `.github` di root folder dan buat folder baru di dalam folder `.github` dengan nama `workflows`. Dalam folder `workflows`, buat file baru bernama `pbp-deploy.yml` dan isi file tersebut dengan:
+```
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  Deployment:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cloning repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Push to Dokku server
+      uses: dokku/github-action@master
+      with:
+        branch: 'main'
+        git_remote_url: ssh://dokku@${{ secrets.DOKKU_SERVER_IP }}/${{ secrets.DOKKU_APP_NAME }}
+        ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+```
+
+8. Buat fie baru bernama `.dockerignore` pada root folder dan isi file tersebut dengan:
+```
+**/*.pyc
+**/*.pyo
+**/*.mo
+**/*.db
+**/*.css.map
+**/*.egg-info
+**/*.sql.gz
+**/__pycache__/
+.cache
+.project
+.idea
+.pydevproject
+.idea/workspace.xml
+.DS_Store
+.git/
+.sass-cache
+.vagrant/
+dist
+docs
+env
+logs
+src/{{ project_name }}/settings/local.py
+src/node_modules
+web/media
+web/static/CACHE
+stats
+Dockerfile
+.gitignore
+Dockerfile
+db.sqlite3
+**/*.md
+logs/
+```
+
+9. Buat file baru bernama `Dockerfile` pada root folder dan isi file tersebut dengan:
+```
+FROM python:3.10-slim-buster
+
+WORKDIR /app
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    DJANGO_SETTINGS_MODULE=inventory.settings \
+    PORT=8000 \
+    WEB_CONCURRENCY=2
+
+# Install system packages required Django.
+RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
+&& rm -rf /var/lib/apt/lists/*
+
+RUN addgroup --system django \
+    && adduser --system --ingroup django django
+
+# Requirements are installed here to ensure they will be cached.
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+
+# Copy project code
+COPY . .
+
+RUN python manage.py collectstatic --noinput --clear
+
+# Run as non-root user
+RUN chown -R django:django /app
+USER django
+
+# Run application
+# CMD gunicorn shopping_list.wsgi:application
+```
+
+10. Dalam file `settings.py`, tambahkan line `import environ` dibawah line `import os`
+
+11. Tambahkan kode `env = environ.Env()` setelah baris kode `BASE_DIR`
+
+12. Tambahkan kode `PRODUCTION = env.bool('PRODUCTION', False)` setelah baris kode `SECRET_KEY`
+
+13. Tambahkan kode berikut setelah bagian kode `DATABASE`:
+```python
+if PRODUCTION:
+    DATABASES = {
+        'default': env.db('DATABASE_URL')
+    }
+    DATABASES["default"]["ATOMIC_REQUESTS"] = True
+```
+
+14. Tambahkan kode `STATIC_ROOT = os.path.join(BASE_DIR, 'static')` setelah bagian kode `STATIC_URL`
+
+15. Dalam github repositorynya, buka Settings -> Secrets and variables -> Actions. Kemudian klik `New repository secret` untuk menambhkan variabel rahasia baru yaitu:
+| Name  | Secret |
+| --- | --- |
+| DOKKU_SERVER_IP  | pbp.cs.ui.ac.id  |
+| DOKKU_APP_NAME  | UsernameSSO-tugas  |
+| DOKKU_SSH_PRIVATE_KEY  | [Isi dari SSH private key]  |
+
+16. Jalankan perintah `python manage.py collectstatic` untuk mengumpulkan file static dari setiap aplikasi ke dalam suatu folder
+
+17. Lakukan `add` - `commit` - `push` ke GitHub
+
+## Pertanyaan
+
+### Jelaskan perbedaan antara asynchronous programming dengan synchronous programming.
+
+Synchronous: Operasi dieksekusi secara berurutan, menghentikan eksekusi kode lain saat tugas berjalan. Hal ini sederhana tetapi bisa membuat aplikasi kurang responsif
+
+Asynchronous: Operasi dapat dieksekusi secara bersamaan, memungkinkan eksekusi kode lain selama tugas berjalan. Hal ini meningkatkan responsivitas aplikasi
+
+### Dalam penerapan JavaScript dan AJAX, terdapat penerapan paradigma event-driven programming. Jelaskan maksud dari paradigma tersebut dan sebutkan salah satu contoh penerapannya pada tugas ini.
+
+Paradigma "event-driven programming" adalah pendekatan di mana aliran eksekusi program tidak ditentukan oleh urutan tugas yang telah dijadwalkan sebelumnya, tetapi oleh kejadian atau peristiwa yang terjadi selama eksekusi. Ini berarti program akan merespons kejadian atau perubahan status yang terjadi secara asinkron, seperti tindakan pengguna (klik tombol, masukan keyboard). Contoh penerapannya adalah pada elemen `scripts` di file `main.html`:
+```js
+...
+function addItem() {
+    fetch("{% url 'main:add_item_ajax' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#form'))
+    }).then(refreshItems)
+
+    document.getElementById("form").reset()
+    return false
+}
+
+document.getElementById("button_add").onclick = addItem
+...
+```
+Yang dimaksud dari kode ini adalah, ketika elemen dengan id `button_add` diklik, dia akan memanggil function addItem(). Penerapan paradigma event-driven programming memungkinkan interaktivitas yang tinggi pada aplikasi web karena dapat merespons langsung terhadap tindakan pengguna tanpa harus menunggu tugas lain selesai terlebih dahulu.
+
+### Jelaskan penerapan asynchronous programming pada AJAX.
+
+Asynchronous programming pada AJAX dapat diterapkan dengan menggunakan XMLHttpRequest object, Fetch API, atau bahkan library eksternal seperti jQuery. Penerapan asynchronous programming pada AJAX memungkinkan eksekusi operasi tanpa harus menunggu operasi selesai. Ini dicapai dengan mengirim permintaan (request) ke server, dan selama menunggu respons dari server:
+- Kode JavaScript tetap berjalan tanpa harus menunggu respons dari server.
+- Fungsi callback digunakan untuk menangani respons server ketika data tiba. Ini memungkinkan pemrosesan data respons sesuai kebutuhan.
+- Aplikasi tetap responsif dan tidak terasa terhenti selama menunggu data dari server.
+
+Dengan demikian, asynchronous programming pada AJAX memungkinkan aplikasi web untuk berinteraksi dengan server dan memuat data tanpa menghentikan operasi lainnya, meningkatkan pengalaman user dan efisiensi aplikasi.
+
+### Pada PBP kali ini, penerapan AJAX dilakukan dengan menggunakan Fetch API daripada library jQuery. Bandingkanlah kedua teknologi tersebut dan tuliskan pendapat kamu teknologi manakah yang lebih baik untuk digunakan.
+
+Kompleksitas: Fetch API adalah API dasar yang disediakan oleh JavaScript, sedangkan jQuery adalah library yang memiliki banyak fitur tambahan. Jika Anda hanya membutuhkan AJAX, Fetch API adalah lebih ringkas karena tidak termasuk fitur tambahan seperti animasi dan manipulasi DOM.
+
+Kecepatan: Fetch API cenderung lebih cepat daripada jQuery karena memiliki overhead yang lebih kecil. jQuery memiliki lebih banyak fitur, sehingga ukuran file yang lebih besar dan dapat mempengaruhi kinerja.
+
+Ukuran File: Fetch API lebih kecil karena hanya berfokus pada AJAX. jQuery, di sisi lain, adalah library yang lebih besar dan memerlukan pengunduhan file yang lebih besar.
+
+Belajar: Jika Anda hanya perlu menguasai AJAX, Fetch API mungkin lebih mudah dipahami karena itu adalah bagian dari JavaScript murni. jQuery memiliki kurva pembelajaran yang sedikit lebih besar, terutama jika Anda ingin memanfaatkan semua fitur yang disediakannya.
+
+Dukungan Browser: jQuery telah ada selama lebih dari satu dekade dan memiliki dukungan yang sangat baik di sebagian besar browser. Fetch API juga memiliki dukungan yang baik, tetapi jika Anda perlu mendukung browser lama, Anda mungkin perlu mempertimbangkan penggunaan polifil atau library seperti "isomorphic-fetch."
+
+Kustomisasi: Fetch API memungkinkan lebih banyak kustomisasi dan kontrol langsung terhadap permintaan dan respons. Dalam hal ini, Fetch API lebih fleksibel.
+
+Kesimpulannya, pemilihan antara Fetch API dan jQuery untuk penggunaan AJAX tergantung pada kebutuhan dan preferensi. Jika ingin kode yang lebih ringkas, Fetch API adalah pilihan yang baik. Namun, jika memerlukan library yang kuat dengan banyak fitur tambahan atau sudah memiliki pengalaman dengan jQuery, maka jQuery masih merupakan pilihan yang valid. 
+
+</details>
 
 <details>
 <summary>Tugas 5 PBP</summary>
