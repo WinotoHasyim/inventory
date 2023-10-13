@@ -3,7 +3,7 @@
 Link Web: none (Error)
 
 <details>
-<summary>Tugas 4 PBP</summary>
+<summary>Tugas 5 PBP</summary>
 <br>
 
 ## Cara implementasi poin-poin pada tugas
@@ -38,9 +38,9 @@ pada `base.html` jika belum.
     }
 </style>
 ```
-style disini digunakan untuk menerapkan styling pada (tapi tidak terbatas untuk) elemen `main` pada HTML. Styling digunakan hanya untuk meng-align webpage menjadi centered
+style disini digunakan untuk menerapkan styling pada elemen `main` pada HTML. Styling digunakan hanya untuk meng-align webpage menjadi centered
 
-3. Untuk setiap file HTML pada folder `main/templates`, tambakan elemen `<main>` pada awal-awal block content dan tutup elemen tersebut di akhir-akhir block content. 
+3. Untuk setiap file HTML pada folder `main/templates`, tambakan tag `<main>` pada awal-awal block content dan tutup tag tersebut di akhir-akhir block content. 
 
 4. Pada file `login.html`, gunakan login button berikut:
 ```html
@@ -127,7 +127,7 @@ ada konten yang menggunakan class navbar collapse agar ketika size dari web tida
     <h5>Sesi terakhir login: {{ last_login }}</h5>
 </main>
 ```
-Disini tabel tidak dipakai lagi untuk menampilkan daftar item, tetapi memakai card. Kode yang digunakan untuk membuat background color dari item terakhir berbeda dengan background color item yang lain adalah `{% if forloop.last %}bg-info{% endif %}` yang berada pada atribut class.
+Disini tabel tidak dipakai lagi untuk menampilkan daftar item, tetapi memakai card. Kode yang digunakan untuk membuat background color dari item terakhir berbeda dengan background color item yang lain adalah `{% if forloop.last %}bg-info{% endif %}` yang berada pada atribut class card.
 
 ### add-commit-push
 
