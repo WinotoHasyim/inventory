@@ -393,15 +393,15 @@ Dengan demikian, asynchronous programming pada AJAX memungkinkan aplikasi web un
 
 ### Pada PBP kali ini, penerapan AJAX dilakukan dengan menggunakan Fetch API daripada library jQuery. Bandingkanlah kedua teknologi tersebut dan tuliskan pendapat kamu teknologi manakah yang lebih baik untuk digunakan.
 
-Kompleksitas: Fetch API adalah API dasar yang disediakan oleh JavaScript, sedangkan jQuery adalah library yang memiliki banyak fitur tambahan. Jika Anda hanya membutuhkan AJAX, Fetch API adalah lebih ringkas karena tidak termasuk fitur tambahan seperti animasi dan manipulasi DOM.
+Kompleksitas: Fetch API adalah API dasar yang disediakan oleh JavaScript, sedangkan jQuery adalah library yang memiliki banyak fitur tambahan. 
 
 Kecepatan: Fetch API cenderung lebih cepat daripada jQuery karena memiliki overhead yang lebih kecil. jQuery memiliki lebih banyak fitur, sehingga ukuran file yang lebih besar dan dapat mempengaruhi kinerja.
 
 Ukuran File: Fetch API lebih kecil karena hanya berfokus pada AJAX. jQuery, di sisi lain, adalah library yang lebih besar dan memerlukan pengunduhan file yang lebih besar.
 
-Belajar: Jika Anda hanya perlu menguasai AJAX, Fetch API mungkin lebih mudah dipahami karena itu adalah bagian dari JavaScript murni. jQuery memiliki kurva pembelajaran yang sedikit lebih besar, terutama jika Anda ingin memanfaatkan semua fitur yang disediakannya.
+Belajar: Fetch API mungkin lebih mudah dipahami karena itu adalah bagian dari JavaScript murni. jQuery memiliki kurva pembelajaran yang sedikit lebih besar, terutama jika ingin memanfaatkan semua fitur yang disediakannya.
 
-Dukungan Browser: jQuery telah ada selama lebih dari satu dekade dan memiliki dukungan yang sangat baik di sebagian besar browser. Fetch API juga memiliki dukungan yang baik, tetapi jika Anda perlu mendukung browser lama, Anda mungkin perlu mempertimbangkan penggunaan polifil atau library seperti "isomorphic-fetch."
+Dukungan Browser: jQuery telah ada selama lebih dari satu dekade dan memiliki dukungan yang sangat baik di sebagian besar browser.
 
 Kustomisasi: Fetch API memungkinkan lebih banyak kustomisasi dan kontrol langsung terhadap permintaan dan respons. Dalam hal ini, Fetch API lebih fleksibel.
 
