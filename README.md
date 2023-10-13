@@ -1,6 +1,6 @@
 # inventoryge
 
-Link Adaptable: none (Error)
+Link Web: none (Error)
 
 <details>
 <summary>Tugas 4 PBP</summary>

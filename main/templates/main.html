@@ -31,26 +31,41 @@
         </nav>
     </header>
     <main>
-        
-        <h3>Kamu menyimpan {{ total_item }} item pada aplikasi ini</h3>
-        <div class="row">
-            {% for item in items %}
-            <div class="card {% if forloop.last %}bg-info{% endif %}" style="width: 20rem; margin: 1rem; background-color: rgb(171, 170, 172);">
-                <div class="card-body">
-                    <h5 class="card-title">{{ item.name }}</h5>
-                    <p class="card-text">{{ item.description }}</p>
-                    <p class="card-text">Amount: {{ item.amount }}</p>
-                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group" role="group">
-                            <form method="POST" action="{% url 'main:increase_amount' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-success">+</button></form>
-                            <form method="POST" action="{% url 'main:decrease_amount' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-danger">-</button></form>
-                        </div>
-                        <form method="POST" action="{% url 'main:remove_item' item.id %}">{% csrf_token %}<button type="submit" class="btn btn-dark">Remove</button></form>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form" onsubmit="return false;">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount" class="col-form-label">Amount:</label>
+                                <input type="number" class="form-control" id="amount" name="amount"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="col-form-label">Description:</label>
+                                <textarea class="form-control" id="description" name="description"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Item</button>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        
+        <h3>Kamu menyimpan <span id="total-items">{{ total_item }}</span> item pada aplikasi ini</h3>
+        <div class="row" id="item_card"></div>
     
         <br />
         
@@ -60,7 +75,82 @@
             </button>
         </a>
 
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Item by AJAX</button>
+
         <h5>Sesi terakhir login: {{ last_login }}</h5>
     </main>
+
+    <script>
+        async function getItems() {
+            return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+        }
+
+        async function refreshItems() {
+            document.getElementById("item_card").innerHTML = ""
+            const items = await getItems()
+            let htmlString = ``
+            items.forEach((item, index) => {
+                const isLastItem = index === items.length - 1;
+                htmlString += `\n
+                <div class="card ${isLastItem ? 'bg-info' : ''}" style="width: 20rem; margin: 1rem; background-color: rgb(171, 170, 172);">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.fields.name}</h5>
+                        <p class="card-text">${item.fields.description}</p>
+                        <p class="card-text">Amount: ${item.fields.amount}</p>
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group" role="group">
+                                <a> <button class="btn btn-success" onclick="increaseAmount(${item.pk}); return false;">+</button> </a>
+                                <a> <button class="btn btn-danger" onclick="decreaseAmount(${item.pk}); return false;">-</button> </a>
+                            </div>
+                            <a> <button class="btn btn-dark" onclick="deleteItem(${item.pk}); return false;">Remove</button> </a>
+                        </div>
+                    </div>
+                </div>` 
+            })
+            const total_item = items.length;
+            document.getElementById("total-items").textContent = total_item;
+            
+            document.getElementById("item_card").innerHTML = htmlString
+        }
+
+        refreshItems()
+
+        function addItem() {
+            fetch("{% url 'main:add_item_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshItems)
+
+            document.getElementById("form").reset()
+            return false
+        }
+
+        document.getElementById("button_add").onclick = addItem
+
+        function deleteItem(itemId) {
+            fetch(`remove_item/${itemId}`, {
+                method: "DELETE",
+                
+            }).then(refreshItems)
+            return false
+        }
+
+        function increaseAmount(itemId) {
+            fetch(`increase_amount/${itemId}`, {
+                method: "GET",
+                
+            }).then(refreshItems)
+            return false
+        }
+
+        function decreaseAmount(itemId) {
+            fetch(`decrease_amount/${itemId}`, {
+                method: "GET",
+                
+            }).then(refreshItems)
+            return false
+        }
+
+    </script>
 
 {% endblock content %}
