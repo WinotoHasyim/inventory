@@ -1,6 +1,6 @@
 # inventoryge
 
-Link Web: https://winoto-hasyim.tugas.pbp.cs.ui.ac.id/
+Link Web: https://winoto-hasyim-tugas.pbp.cs.ui.ac.id/
 
 <details>
 <summary>Tugas 6 PBP</summary>
