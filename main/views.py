@@ -46,7 +46,7 @@ def create_item(request):
     context = {'form': form}
     return render(request, "create_item.html", context)
 
-@csrf_exempt
+# @csrf_exempt
 def create_item_flutter(request):
     if request.method == 'POST':
         
@@ -65,7 +65,7 @@ def create_item_flutter(request):
     else:
         return JsonResponse({"status": "error"}, status=401)
 
-@csrf_exempt
+# @csrf_exempt
 def add_item_ajax(request):
     if request.method == 'POST':
         name = request.POST.get("name")
@@ -97,7 +97,7 @@ def decrease_amount(request, id):
             item.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
 
-@csrf_exempt
+# @csrf_exempt
 def remove_item(request, id):
     if request.method == "DELETE":
         item = get_object_or_404(Item, pk=id, user=request.user)
