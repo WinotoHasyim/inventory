@@ -1,6 +1,7 @@
 import datetime
+import json
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, JsonResponse
 from main.forms import ItemForm
 from django.urls import reverse
 from main.models import Item
@@ -44,6 +45,25 @@ def create_item(request):
     
     context = {'form': form}
     return render(request, "create_item.html", context)
+
+@csrf_exempt
+def create_item_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_item = Item.objects.create(
+            user = request.user,
+            name = data["name"],
+            amount = int(data["amount"]),
+            description = data["description"]
+        )
+
+        new_item.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
 
 @csrf_exempt
 def add_item_ajax(request):
